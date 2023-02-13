@@ -32,6 +32,14 @@ RSpec.describe 'Logging In' do
 
     expect(current_path).to eq(login_path)
 
-    expect(page).to have_content('Sorry, your credentials are bad.')
+    expect(page).to have_content('Invalid password')
+
+    fill_in :email, with: 'invalid email'
+    fill_in :password, with: 'test'
+
+    click_on 'Log In'
+
+    expect(current_path).to eq(login_path)
+    expect(page).to have_content('No user registered with that email')
   end
 end
