@@ -9,7 +9,10 @@ class UsersController < ApplicationController
 
   def create
     user = User.create(user_params)
-    if user.save
+    if params[:user][:password].nil? || params[:user][:password].empty?
+      flash[:error] = "Password can't be blank"
+      redirect_to register_path
+    elsif user.save
       flash[:success] = "Welcome, #{user.name}!"
       redirect_to user_path(user)
     else
@@ -23,14 +26,11 @@ class UsersController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email])
-    if user.nil?
-      flash[:error] = 'No user registered with that email'
-      render :login_form
-    elsif user.authenticate(params[:password])
+    if user && user.authenticate(params[:password])
       flash[:success] = "Welcome, #{user.email}!"
       redirect_to root_path
     else
-      flash[:error] = 'Invalid password'
+      flash[:error] = 'Login failed'
       render :login_form
     end
   end
@@ -39,10 +39,5 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def user_not_found(exception)
-    flash[:error] = exception.message
-    render :login_form
   end
 end

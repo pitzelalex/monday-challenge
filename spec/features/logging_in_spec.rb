@@ -32,7 +32,7 @@ RSpec.describe 'Logging In' do
 
     expect(current_path).to eq(login_path)
 
-    expect(page).to have_content('Invalid password')
+    expect(page).to have_content('Login failed')
 
     fill_in :email, with: 'invalid email'
     fill_in :password, with: 'test'
@@ -40,6 +40,6 @@ RSpec.describe 'Logging In' do
     click_on 'Log In'
 
     expect(current_path).to eq(login_path)
-    expect(page).to have_content('No user registered with that email')
+    expect(page).to have_content('Login failed')
   end
 end

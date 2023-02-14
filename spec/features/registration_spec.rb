@@ -61,4 +61,24 @@ RSpec.describe "User Registration" do
     expect(current_path).to eq(register_path)
     expect(page).to have_content("Password confirmation doesn't match Password")
   end
+
+  it "can't have blank passwords" do
+    visit register_path
+
+    fill_in :user_name, with: 'User One'
+    fill_in :user_email, with: 'user1@example.com'
+    click_button 'Create New User'
+
+    expect(current_path).to eq(register_path)
+    expect(page).to have_content("Password can't be blank")
+
+    fill_in :user_name, with: 'User One'
+    fill_in :user_email, with: 'user1@example.com'
+    fill_in :user_password, with: ''
+    fill_in :user_password_confirmation, with: ''
+    click_button 'Create New User'
+
+    expect(current_path).to eq(register_path)
+    expect(page).to have_content("Password can't be blank")
+  end
 end
